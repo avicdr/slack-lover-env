@@ -6,7 +6,6 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import { Layout } from '@/components/Layout';
 
 export default function NewMessage() {
   const [search, setSearch] = useState('');
@@ -45,8 +44,7 @@ export default function NewMessage() {
   };
 
   return (
-    <Layout>
-      <div className="flex flex-col flex-1">
+    <div className="flex flex-col flex-1">
         {/* Header */}
         <div className="border-b border-border px-6 py-4">
           <div className="flex items-center gap-4 mb-4">
@@ -122,6 +120,5 @@ export default function NewMessage() {
           </div>
         </div>
       </div>
-    </Layout>
   );
 }

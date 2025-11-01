@@ -1,4 +1,3 @@
-import { Layout } from '@/components/Layout';
 import { Phone, Video, ScreenShare, Mic, MicOff, PhoneOff, Users } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -22,8 +21,7 @@ export default function Huddles() {
   ];
 
   return (
-    <Layout>
-      <div className="flex-1 flex flex-col p-6 max-w-5xl">
+    <div className="flex-1 flex flex-col p-6 max-w-5xl">
         <div className="mb-6">
           <h1 className="text-3xl font-black mb-2">Huddles</h1>
           <p className="text-muted-foreground">
@@ -121,6 +119,5 @@ export default function Huddles() {
           </Card>
         </div>
       </div>
-    </Layout>
   );
 }

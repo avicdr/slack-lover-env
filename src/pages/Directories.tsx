@@ -1,4 +1,3 @@
-import { Layout } from '@/components/Layout';
 import { Users, Hash, Mail } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -49,8 +48,7 @@ export default function Directories() {
   ];
 
   return (
-    <Layout>
-      <div className="flex-1 flex flex-col p-6 max-w-6xl">
+    <div className="flex-1 flex flex-col p-6 max-w-6xl">
         <div className="mb-6">
           <h1 className="text-3xl font-black mb-2">Directory</h1>
           <p className="text-muted-foreground">
@@ -132,6 +130,5 @@ export default function Directories() {
           </TabsContent>
         </Tabs>
       </div>
-    </Layout>
   );
 }

@@ -13,6 +13,7 @@ import { AddChannelDialog } from './AddChannelDialog';
 import { AddDMDialog } from './AddDMDialog';
 import { ChannelContextMenu } from './ChannelContextMenu';
 import { ChannelItemContextMenu } from './ChannelItemContextMenu';
+import { DeleteChannelDialog } from './DeleteChannelDialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -46,6 +47,7 @@ interface SortableChannelItemProps {
   sections: string[];
   currentSection: string;
   onMoveToSection: (channelId: string, newSection: string) => void;
+  onDelete: (channelId: string, channelName: string) => void;
 }
 
 const SortableChannelItem = ({ 
@@ -54,7 +56,8 @@ const SortableChannelItem = ({
   onClick, 
   sections, 
   currentSection, 
-  onMoveToSection 
+  onMoveToSection,
+  onDelete 
 }: SortableChannelItemProps) => {
   const {
     attributes,
@@ -74,6 +77,7 @@ const SortableChannelItem = ({
       sections={sections}
       currentSection={currentSection}
       onMoveToSection={(section) => onMoveToSection(channel.id, section)}
+      onDelete={() => onDelete(channel.id, channel.name)}
     >
       <button
         ref={setNodeRef}
@@ -109,6 +113,11 @@ export const WorkspaceSidebar = () => {
   const [collapsedSections, setCollapsedSections] = useState<Record<string, boolean>>({});
   const [showAddChannel, setShowAddChannel] = useState(false);
   const [showAddDM, setShowAddDM] = useState(false);
+  const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; channelId: string; channelName: string }>({
+    open: false,
+    channelId: '',
+    channelName: '',
+  });
   const navigate = useNavigate();
 
   const sensors = useSensors(
@@ -213,10 +222,7 @@ export const WorkspaceSidebar = () => {
     >
       {/* Workspace Header */}
       <div className="px-3 py-2 border-b border-[hsl(var(--slack-purple-active))]">
-        <Button
-          variant="ghost"
-          className="w-full justify-between px-2 h-auto py-2 text-foreground hover:bg-[hsl(var(--slack-purple-hover))] rounded"
-        >
+        <div className="w-full flex justify-between items-center px-2 py-2">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded bg-[hsl(var(--slack-purple-active))] flex items-center justify-center font-black text-sm">
               NW
@@ -228,10 +234,7 @@ export const WorkspaceSidebar = () => {
               variant="ghost"
               size="icon"
               className="h-7 w-7 flex-shrink-0 text-foreground hover:bg-[hsl(var(--slack-purple-active))]"
-              onClick={(e) => {
-                e.stopPropagation();
-                navigate('/new-message');
-              }}
+              onClick={() => navigate('/new-message')}
               title="New message"
             >
               <Edit className="h-4 w-4" />
@@ -242,7 +245,6 @@ export const WorkspaceSidebar = () => {
                   variant="ghost"
                   size="icon"
                   className="h-7 w-7 flex-shrink-0 text-foreground hover:bg-[hsl(var(--slack-purple-active))]"
-                  onClick={(e) => e.stopPropagation()}
                   title="Settings"
                 >
                   <Settings className="h-4 w-4" />
@@ -265,7 +267,7 @@ export const WorkspaceSidebar = () => {
             </DropdownMenu>
             <ChevronDown className="h-4 w-4 ml-1" />
           </div>
-        </Button>
+        </div>
       </div>
 
       {/* Navigation */}
@@ -375,6 +377,9 @@ export const WorkspaceSidebar = () => {
                           sections={Object.keys(channelsBySection)}
                           currentSection={section}
                           onMoveToSection={handleMoveToSection}
+                          onDelete={(channelId, channelName) => {
+                            setDeleteDialog({ open: true, channelId, channelName });
+                          }}
                         />
                       ))}
                       <button 
@@ -445,6 +450,12 @@ export const WorkspaceSidebar = () => {
       
       <AddChannelDialog open={showAddChannel} onOpenChange={setShowAddChannel} />
       <AddDMDialog open={showAddDM} onOpenChange={setShowAddDM} />
+      <DeleteChannelDialog
+        open={deleteDialog.open}
+        onOpenChange={(open) => setDeleteDialog({ ...deleteDialog, open })}
+        channelId={deleteDialog.channelId}
+        channelName={deleteDialog.channelName}
+      />
     </motion.aside>
   );
 };

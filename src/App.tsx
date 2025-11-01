@@ -24,18 +24,16 @@ const ProtectedRoutes = () => {
   if (!user) return <Navigate to="/auth" />;
 
   return (
-    <Layout>
-      <Routes>
-        <Route path="/" element={<MessageArea />} />
-        <Route path="/threads" element={<Threads />} />
-        <Route path="/activity" element={<Activity />} />
-        <Route path="/starred" element={<Starred />} />
-        <Route path="/directories" element={<Directories />} />
-        <Route path="/huddles" element={<Huddles />} />
-        <Route path="/new-message" element={<NewMessage />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Layout>
+    <Routes>
+      <Route path="/" element={<MessageArea />} />
+      <Route path="/threads" element={<Threads />} />
+      <Route path="/activity" element={<Activity />} />
+      <Route path="/starred" element={<Starred />} />
+      <Route path="/directories" element={<Directories />} />
+      <Route path="/huddles" element={<Huddles />} />
+      <Route path="/new-message" element={<NewMessage />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 };
 
@@ -47,7 +45,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/auth" element={<Auth />} />
-          <Route path="/*" element={<ProtectedRoutes />} />
+          <Route path="/*" element={<Layout><ProtectedRoutes /></Layout>} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>

@@ -1,4 +1,3 @@
-import { Layout } from '@/components/Layout';
 import { Star, Hash, MessageSquare } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 
@@ -43,8 +42,7 @@ export default function Starred() {
   ];
 
   return (
-    <Layout>
-      <div className="flex-1 flex flex-col p-6 max-w-5xl">
+    <div className="flex-1 flex flex-col p-6 max-w-5xl">
         <div className="mb-6">
           <h1 className="text-3xl font-black mb-2">Starred</h1>
           <p className="text-muted-foreground">
@@ -86,6 +84,5 @@ export default function Starred() {
           </div>
         )}
       </div>
-    </Layout>
   );
 }

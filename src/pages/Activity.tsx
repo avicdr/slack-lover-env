@@ -1,4 +1,3 @@
-import { Layout } from '@/components/Layout';
 import { Heart, MessageSquare, AtSign, UserPlus } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Avatar } from '@/components/ui/avatar';
@@ -59,8 +58,7 @@ export default function Activity() {
   ];
 
   return (
-    <Layout>
-      <div className="flex-1 flex flex-col p-6 max-w-4xl">
+    <div className="flex-1 flex flex-col p-6 max-w-4xl">
         <div className="mb-6">
           <h1 className="text-3xl font-black mb-2">Activity</h1>
           <p className="text-muted-foreground">
@@ -93,6 +91,5 @@ export default function Activity() {
           ))}
         </div>
       </div>
-    </Layout>
   );
 }

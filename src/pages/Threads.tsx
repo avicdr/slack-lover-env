@@ -1,4 +1,3 @@
-import { Layout } from '@/components/Layout';
 import { MessageSquare, User } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 
@@ -34,8 +33,7 @@ export default function Threads() {
   ];
 
   return (
-    <Layout>
-      <div className="flex-1 flex flex-col p-6 max-w-5xl">
+    <div className="flex-1 flex flex-col p-6 max-w-5xl">
         <div className="mb-6">
           <h1 className="text-3xl font-black mb-2">Threads</h1>
           <p className="text-muted-foreground">
@@ -73,6 +71,5 @@ export default function Threads() {
           ))}
         </div>
       </div>
-    </Layout>
   );
 }
