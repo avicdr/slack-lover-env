@@ -45,14 +45,12 @@ export const AddDMDialog = ({ open, onOpenChange }: AddDMDialogProps) => {
     if (!user) return;
 
     try {
-      // Check if DM already exists
-      const { data: existingChannels, error: checkError } = await supabase
+      // Check if DM already exists - need to check both user orders
+      const { data: existingChannels } = await supabase
         .from('channels')
-        .select('id')
+        .select('id, name')
         .eq('type', 'dm')
-        .contains('dm_users', [user.id, profileId]);
-
-      if (checkError) throw checkError;
+        .or(`dm_users.cs.{${user.id},${profileId}},dm_users.cs.{${profileId},${user.id}}`);
 
       if (existingChannels && existingChannels.length > 0) {
         toast({

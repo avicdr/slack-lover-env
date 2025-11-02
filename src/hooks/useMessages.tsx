@@ -7,6 +7,10 @@ export interface Message {
   channel_id: string;
   user_id: string;
   content: string;
+  file_url?: string | null;
+  file_name?: string | null;
+  file_type?: string | null;
+  file_size?: number | null;
   created_at: string;
   updated_at: string;
   profiles?: {

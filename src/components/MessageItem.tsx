@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, Smile, Bookmark, MoreHorizontal, Trash2 } from 'lucide-react';
+import { MessageSquare, Smile, Bookmark, MoreHorizontal, Trash2, File } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Message } from '@/hooks/useMessages';
 import { useAuth } from '@/hooks/useAuth';
@@ -146,7 +146,41 @@ export const MessageItem = ({ message, showAvatar = true, onDelete }: MessageIte
             {formatTime(message.created_at)}
           </div>
         )}
-        <div className="text-[15px] leading-[1.46668]">{message.content}</div>
+        {message.content && <div className="text-[15px] leading-[1.46668]">{message.content}</div>}
+        
+        {/* File attachment */}
+        {message.file_url && (
+          <div className="mt-2">
+            {message.file_type?.startsWith('image/') ? (
+              <a href={message.file_url} target="_blank" rel="noopener noreferrer" className="block">
+                <img 
+                  src={message.file_url} 
+                  alt={message.file_name || 'Attachment'} 
+                  className="max-w-sm max-h-80 rounded-lg border border-border hover:opacity-90 transition-opacity"
+                />
+              </a>
+            ) : (
+              <a 
+                href={message.file_url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 p-3 rounded-lg border border-border bg-muted/50 hover:bg-muted transition-colors max-w-sm"
+              >
+                <div className="w-10 h-10 rounded bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <File className="h-5 w-5 text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">{message.file_name}</p>
+                  {message.file_size && (
+                    <p className="text-xs text-muted-foreground">
+                      {(message.file_size / 1024 / 1024).toFixed(2)} MB
+                    </p>
+                  )}
+                </div>
+              </a>
+            )}
+          </div>
+        )}
 
         {/* Reactions */}
         <div className="flex gap-1 mt-1 flex-wrap">
