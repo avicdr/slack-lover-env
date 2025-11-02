@@ -1,16 +1,37 @@
-import { MoreHorizontal } from 'lucide-react';
+import { MoreHorizontal, Settings, Users, Bell, Archive, Link, Zap } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 const More = () => {
+  const features = [
+    { icon: Settings, title: 'Workspace Settings', description: 'Manage your workspace preferences and configurations' },
+    { icon: Users, title: 'People & Teams', description: 'Invite members and organize teams' },
+    { icon: Bell, title: 'Notifications', description: 'Customize your notification preferences' },
+    { icon: Archive, title: 'Archives', description: 'View archived channels and messages' },
+    { icon: Link, title: 'Integrations', description: 'Connect apps and services to your workspace' },
+    { icon: Zap, title: 'Automations', description: 'Set up workflows and automated tasks' },
+  ];
+
   return (
-    <div className="flex-1 flex flex-col items-center justify-center bg-background">
-      <div className="text-center space-y-4">
-        <div className="w-20 h-20 rounded-full bg-[hsl(var(--slack-purple-active))] flex items-center justify-center mx-auto">
-          <MoreHorizontal className="h-10 w-10 text-[hsl(var(--slack-cyan))]" />
+    <div className="flex-1 bg-background p-8">
+      <div className="max-w-5xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-3xl font-black mb-2">More</h1>
+          <p className="text-muted-foreground">Additional features and settings for your workspace</p>
         </div>
-        <h2 className="text-2xl font-black">More</h2>
-        <p className="text-muted-foreground max-w-md">
-          Additional features and settings. Explore more tools and options for your workspace.
-        </p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {features.map((feature) => (
+            <Card key={feature.title} className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-lg bg-[hsl(var(--slack-purple-active))] flex items-center justify-center mb-3">
+                  <feature.icon className="h-6 w-6 text-[hsl(var(--slack-cyan))]" />
+                </div>
+                <CardTitle className="text-lg">{feature.title}</CardTitle>
+                <CardDescription>{feature.description}</CardDescription>
+              </CardHeader>
+            </Card>
+          ))}
+        </div>
       </div>
     </div>
   );

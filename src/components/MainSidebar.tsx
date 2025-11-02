@@ -64,7 +64,7 @@ export const MainSidebar = () => {
                   <item.icon className="h-5 w-5" />
                 </Button>
                 {item.showLabel && (
-                  <span className="text-[10px] text-[hsl(var(--slack-text-muted))] font-medium">
+                  <span className="text-xs text-[hsl(var(--slack-text-muted))] font-bold">
                     {item.label}
                   </span>
                 )}
