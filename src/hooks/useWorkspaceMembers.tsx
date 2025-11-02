@@ -7,7 +7,6 @@ export interface WorkspaceMember {
   username: string;
   display_name: string | null;
   avatar_url: string | null;
-  status: string;
   isOnline?: boolean;
 }
 
@@ -22,7 +21,7 @@ export const useWorkspaceMembers = () => {
     const fetchMembers = async () => {
       const { data, error } = await supabase
         .from('profiles')
-        .select('id, username, display_name, avatar_url, status')
+        .select('id, username, display_name, avatar_url')
         .order('username', { ascending: true });
 
       if (!error && data) {
