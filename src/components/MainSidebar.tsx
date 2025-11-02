@@ -30,7 +30,23 @@ export const MainSidebar = () => {
 
   return (
     <aside className="w-[68px] h-screen bg-[hsl(var(--slack-purple-dark))] flex flex-col items-center py-3 gap-2 border-r border-[hsl(var(--slack-purple-active))]">
+      {/* Workspace Icon */}
       <TooltipProvider delayDuration={0}>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button 
+              onClick={() => navigate('/')}
+              className="w-12 h-12 rounded-lg bg-[hsl(var(--slack-purple-active))] flex items-center justify-center font-black text-sm hover:bg-[hsl(var(--slack-purple-hover))] transition-colors mb-2"
+            >
+              NW
+            </button>
+          </TooltipTrigger>
+          <TooltipContent side="right">
+            <p>New Workspace</p>
+          </TooltipContent>
+        </Tooltip>
+
+        {/* Navigation Items */}
         {navItems.map((item) => (
           <Tooltip key={item.path}>
             <TooltipTrigger asChild>

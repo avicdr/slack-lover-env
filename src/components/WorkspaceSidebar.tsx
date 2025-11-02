@@ -59,6 +59,7 @@ const SortableChannelItem = ({
   onMoveToSection,
   onDelete 
 }: SortableChannelItemProps) => {
+  const navigate = useNavigate();
   const {
     attributes,
     listeners,
@@ -70,6 +71,11 @@ const SortableChannelItem = ({
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+  };
+
+  const handleClick = () => {
+    onClick();
+    navigate(`/c/${channel.id}`);
   };
 
   return (
@@ -84,9 +90,9 @@ const SortableChannelItem = ({
         style={style}
         {...attributes}
         {...listeners}
-        onClick={onClick}
+        onClick={handleClick}
         className={cn(
-          'w-full flex items-center gap-2 px-3 py-1 rounded text-[15px] group transition-all',
+          'w-full flex items-center gap-2 px-3 py-1 rounded text-[15px] group transition-all cursor-pointer',
           isActive
             ? 'bg-[hsl(var(--slack-cyan))] text-foreground font-bold'
             : 'text-[hsl(var(--slack-text-secondary))] hover:bg-[hsl(var(--slack-purple-hover))]'
