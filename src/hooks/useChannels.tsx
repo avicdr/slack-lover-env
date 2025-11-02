@@ -74,7 +74,8 @@ export const useChannels = () => {
           schema: 'public',
           table: 'channels',
         },
-        () => {
+        (payload) => {
+          console.log('Channel change detected:', payload);
           fetchChannels();
         }
       )

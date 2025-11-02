@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { MainSidebar } from './MainSidebar';
 import { WorkspaceSidebar } from './WorkspaceSidebar';
+import { MembersSidebar } from './MembersSidebar';
 import { TopBar } from './TopBar';
 import { useAuth } from '@/hooks/useAuth';
 import { Loader2 } from 'lucide-react';
@@ -28,6 +29,7 @@ export const Layout = ({ children }: LayoutProps) => {
         <TopBar />
         {children}
       </main>
+      <MembersSidebar />
     </div>
   );
 };

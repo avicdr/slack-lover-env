@@ -202,7 +202,7 @@ export const WorkspaceSidebar = () => {
       >
         <div className="p-3 border-b border-[hsl(var(--slack-purple-active))]">
           <div className="w-10 h-10 rounded bg-[hsl(var(--slack-purple-active))] flex items-center justify-center text-foreground font-black text-sm">
-            NW
+            W
           </div>
         </div>
       </motion.aside>
@@ -247,9 +247,6 @@ export const WorkspaceSidebar = () => {
       <div className="px-3 py-2 border-b border-[hsl(var(--slack-purple-active))]">
         <div className="w-full flex justify-between items-center px-2 py-2">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded bg-[hsl(var(--slack-purple-active))] flex items-center justify-center font-black text-sm">
-              NW
-            </div>
             <span className="font-black text-[15px]">New Workspace</span>
           </div>
           <div className="flex items-center gap-1">

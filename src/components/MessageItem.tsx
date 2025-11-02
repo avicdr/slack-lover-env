@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, Smile, Bookmark, MoreHorizontal, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,12 +6,15 @@ import { Message } from '@/hooks/useMessages';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
+import { toast as sonnerToast } from 'sonner';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { parseMentions, ParsedMention } from '@/utils/mentionParser';
 
 interface MessageItemProps {
   message: Message;
@@ -23,8 +26,18 @@ export const MessageItem = ({ message, showAvatar = true, onDelete }: MessageIte
   const [isHovered, setIsHovered] = useState(false);
   const [showThread, setShowThread] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [parsedContent, setParsedContent] = useState<ParsedMention[]>([]);
   const { user } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const parseContent = async () => {
+      const parts = await parseMentions(message.content);
+      setParsedContent(parts);
+    };
+    parseContent();
+  }, [message.content]);
 
   const commonEmojis = ['👍', '❤️', '😂', '😮', '😢', '🎉', '🚀', '👀'];
 
@@ -119,6 +132,44 @@ export const MessageItem = ({ message, showAvatar = true, onDelete }: MessageIte
     return message.reactions?.some(r => r.emoji === emoji && r.user_id === user?.id);
   };
 
+  const handleMentionClick = async (userId: string, username: string) => {
+    if (!user || userId === user.id) return;
+
+    try {
+      // Check if DM already exists
+      const { data: existingChannels } = await supabase
+        .from('channels')
+        .select('id')
+        .eq('type', 'dm')
+        .contains('dm_users', [user.id, userId]);
+
+      if (existingChannels && existingChannels.length > 0) {
+        navigate(`/c/${existingChannels[0].id}`);
+        return;
+      }
+
+      // Create new DM
+      const { data, error } = await supabase
+        .from('channels')
+        .insert({
+          name: username,
+          type: 'dm',
+          section: 'Direct messages',
+          created_by: user.id,
+          dm_users: [user.id, userId],
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      sonnerToast.success(`Started conversation with @${username}`);
+      navigate(`/c/${data.id}`);
+    } catch (error: any) {
+      sonnerToast.error(error.message || 'Failed to start conversation');
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -146,7 +197,21 @@ export const MessageItem = ({ message, showAvatar = true, onDelete }: MessageIte
             {formatTime(message.created_at)}
           </div>
         )}
-        <div className="text-[15px] leading-[1.46668]">{message.content}</div>
+        <div className="text-[15px] leading-[1.46668]">
+          {parsedContent.map((part, idx) =>
+            part.type === 'mention' && part.userId ? (
+              <button
+                key={idx}
+                onClick={() => handleMentionClick(part.userId!, part.username!)}
+                className="bg-primary/10 hover:bg-primary/20 text-primary px-1 rounded transition-colors font-medium"
+              >
+                {part.content}
+              </button>
+            ) : (
+              <span key={idx}>{part.content}</span>
+            )
+          )}
+        </div>
 
         {/* Reactions */}
         <div className="flex gap-1 mt-1 flex-wrap">
