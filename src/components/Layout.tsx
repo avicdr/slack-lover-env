@@ -22,14 +22,16 @@ export const Layout = ({ children }: LayoutProps) => {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
-      <MainSidebar />
-      <WorkspaceSidebar />
-      <main className="flex-1 flex flex-col">
-        <TopBar />
-        {children}
-      </main>
-      <MembersSidebar />
+    <div className="flex flex-col h-screen overflow-hidden bg-background">
+      <TopBar />
+      <div className="flex flex-1 overflow-hidden">
+        <MainSidebar />
+        <WorkspaceSidebar />
+        <main className="flex-1 flex flex-col">
+          {children}
+        </main>
+        <MembersSidebar />
+      </div>
     </div>
   );
 };
