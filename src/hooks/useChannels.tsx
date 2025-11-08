@@ -65,6 +65,17 @@ export const useChannels = () => {
             .select();
 
           if (!insertError && newChannels) {
+            // Add user as member to all newly created channels
+            const channelMembers = newChannels.map(channel => ({
+              channel_id: channel.id,
+              user_id: user.id,
+              role: 'admin'
+            }));
+
+            await (supabase as any)
+              .from('channel_members')
+              .insert(channelMembers);
+
             setChannels(newChannels);
           }
         } else {
