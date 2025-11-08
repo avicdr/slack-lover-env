@@ -51,20 +51,6 @@ export const useChannels = () => {
               created_by: user.id,
             },
             {
-              name: 'debugging-tips',
-              type: 'channel',
-              description: 'Share your best debugging tips and tricks',
-              section: 'Channels',
-              created_by: user.id,
-            },
-            {
-              name: 'code-reviews',
-              type: 'channel',
-              description: 'Get your code reviewed by the team',
-              section: 'Channels',
-              created_by: user.id,
-            },
-            {
               name: 'announcements',
               type: 'channel',
               description: 'Important team announcements and updates',
