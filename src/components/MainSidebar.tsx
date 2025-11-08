@@ -22,7 +22,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
-import dmsIcon from '@/assets/dms-icon.png';
+
 
 const navItems = [
   { icon: Home, label: 'Home', path: '/', showLabel: true, hasPanel: false },
@@ -147,15 +147,7 @@ export const MainSidebar = () => {
                             : 'text-[hsl(var(--slack-text-muted))] hover:bg-[hsl(var(--slack-purple-hover))] hover:text-foreground'
                         )}
                       >
-                        {item.label === 'DMs' ? (
-                          <img 
-                            src={dmsIcon} 
-                            alt="DMs" 
-                            className="h-5 w-5 scale-x-[-1]" 
-                          />
-                        ) : (
-                          <item.icon className="h-5 w-5" />
-                        )}
+                        <item.icon className="h-5 w-5" />
                       </Button>
                       {item.showLabel && (
                         <span className="text-xs text-[hsl(var(--slack-text-muted))] font-bold">

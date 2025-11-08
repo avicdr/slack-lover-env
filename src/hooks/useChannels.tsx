@@ -25,7 +25,7 @@ export const useChannels = () => {
 
   useEffect(() => {
     const fetchChannels = async () => {
-      if (!user) return;
+      setLoading(true);
 
       const { data, error } = await supabase
         .from('channels')
@@ -34,7 +34,7 @@ export const useChannels = () => {
 
       if (!error && data) {
         // If no channels exist, create demo channels
-        if (data.length === 0) {
+        if (data.length === 0 && user) {
           const demoChannels = [
             {
               name: 'general',
@@ -83,6 +83,9 @@ export const useChannels = () => {
           const channelsWithProfiles = await Promise.all(
             data.map(async (channel: any) => {
               if (channel.type === 'dm' && channel.dm_users) {
+                if (!user) {
+                  return channel;
+                }
                 const otherUserId = channel.dm_users.find((id: string) => id !== user.id);
                 if (otherUserId) {
                   const { data: profileData } = await supabase
