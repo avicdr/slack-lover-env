@@ -33,31 +33,81 @@ export const useChannels = () => {
         .order('created_at', { ascending: true });
 
       if (!error && data) {
-        // For DM channels, fetch the other user's profile
-        const channelsWithProfiles = await Promise.all(
-          data.map(async (channel: any) => {
-            if (channel.type === 'dm' && channel.dm_users) {
-              const otherUserId = channel.dm_users.find((id: string) => id !== user.id);
-              if (otherUserId) {
-                const { data: profileData } = await supabase
-                  .from('profiles')
-                  .select('id, username, display_name, avatar_url')
-                  .eq('id', otherUserId)
-                  .single();
-                
-                if (profileData) {
-                  return {
-                    ...channel,
-                    name: profileData.display_name || profileData.username,
-                    other_user: profileData,
-                  };
+        // If no channels exist, create demo channels
+        if (data.length === 0) {
+          const demoChannels = [
+            {
+              name: 'general',
+              type: 'channel',
+              description: 'General discussion for the team',
+              section: 'Channels',
+              created_by: user.id,
+            },
+            {
+              name: 'random',
+              type: 'channel',
+              description: 'Random stuff, memes, and casual conversation',
+              section: 'Channels',
+              created_by: user.id,
+            },
+            {
+              name: 'debugging-tips',
+              type: 'channel',
+              description: 'Share your best debugging tips and tricks',
+              section: 'Channels',
+              created_by: user.id,
+            },
+            {
+              name: 'code-reviews',
+              type: 'channel',
+              description: 'Get your code reviewed by the team',
+              section: 'Channels',
+              created_by: user.id,
+            },
+            {
+              name: 'announcements',
+              type: 'channel',
+              description: 'Important team announcements and updates',
+              section: 'Channels',
+              created_by: user.id,
+            },
+          ];
+
+          const { data: newChannels, error: insertError } = await supabase
+            .from('channels')
+            .insert(demoChannels)
+            .select();
+
+          if (!insertError && newChannels) {
+            setChannels(newChannels);
+          }
+        } else {
+          // For DM channels, fetch the other user's profile
+          const channelsWithProfiles = await Promise.all(
+            data.map(async (channel: any) => {
+              if (channel.type === 'dm' && channel.dm_users) {
+                const otherUserId = channel.dm_users.find((id: string) => id !== user.id);
+                if (otherUserId) {
+                  const { data: profileData } = await supabase
+                    .from('profiles')
+                    .select('id, username, display_name, avatar_url')
+                    .eq('id', otherUserId)
+                    .single();
+                  
+                  if (profileData) {
+                    return {
+                      ...channel,
+                      name: profileData.display_name || profileData.username,
+                      other_user: profileData,
+                    };
+                  }
                 }
               }
-            }
-            return channel;
-          })
-        );
-        setChannels(channelsWithProfiles);
+              return channel;
+            })
+          );
+          setChannels(channelsWithProfiles);
+        }
       }
       setLoading(false);
     };

@@ -2,9 +2,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Layout } from "./components/Layout";
-import Auth from "./pages/Auth";
 import Index from "./pages/Index";
 import Channel from "./pages/Channel";
 import Threads from "./pages/Threads";
@@ -21,11 +20,16 @@ import { useAuth } from "./hooks/useAuth";
 
 const queryClient = new QueryClient();
 
-const ProtectedRoutes = () => {
-  const { user, loading } = useAuth();
+const AppRoutes = () => {
+  const { loading } = useAuth();
 
-  if (loading) return null;
-  if (!user) return <Navigate to="/auth" />;
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-background">
+        <div className="text-muted-foreground">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <Routes>
@@ -51,9 +55,9 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/*" element={<Layout><ProtectedRoutes /></Layout>} />
-        </Routes>
+        <Layout>
+          <AppRoutes />
+        </Layout>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
