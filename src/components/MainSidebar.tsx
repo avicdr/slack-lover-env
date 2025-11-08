@@ -8,6 +8,7 @@ import { AnimatePresence } from 'framer-motion';
 import { SidebarHoverPanel } from './SidebarHoverPanel';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Tooltip,
   TooltipContent,
@@ -21,6 +22,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
+import dmsIcon from '@/assets/dms-icon.png';
 
 const navItems = [
   { icon: Home, label: 'Home', path: '/', showLabel: true, hasPanel: false },
@@ -98,82 +100,94 @@ export const MainSidebar = () => {
   };
 
   return (
-    <aside className="w-[68px] h-screen bg-[hsl(var(--slack-purple-dark))] flex flex-col items-center py-3 gap-2 border-r border-[hsl(var(--slack-purple-active))]">
-      {/* Workspace Icon */}
+    <aside className="w-[68px] h-screen bg-[hsl(var(--slack-purple-dark))] flex flex-col border-r border-[hsl(var(--slack-purple-active))]">
       <TooltipProvider delayDuration={0}>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <button 
-              onClick={() => navigate('/')}
-              className="w-12 h-12 rounded-lg bg-[hsl(var(--slack-purple-active))] flex items-center justify-center font-black text-sm hover:bg-[hsl(var(--slack-purple-hover))] transition-colors mb-2"
-            >
-              DD
-            </button>
-          </TooltipTrigger>
-          <TooltipContent side="right" className="bg-popover border-border p-3">
-            <div className="font-bold text-sm">Debugging Demons</div>
-          </TooltipContent>
-        </Tooltip>
+        {/* Workspace Icon */}
+        <div className="py-3 flex justify-center">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button 
+                onClick={() => navigate('/')}
+                className="w-12 h-12 rounded-lg bg-[hsl(var(--slack-purple-active))] flex items-center justify-center font-black text-sm hover:bg-[hsl(var(--slack-purple-hover))] transition-colors"
+              >
+                DD
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="right" className="bg-popover border-border p-3">
+              <div className="font-bold text-sm">Debugging Demons</div>
+            </TooltipContent>
+          </Tooltip>
+        </div>
 
-        {/* Navigation Items */}
-        {navItems.map((item) => (
-          <div key={item.path} className="relative">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div 
-                  className="flex flex-col items-center gap-1"
-                  onMouseEnter={() => handleMouseEnter(item.label, item.hasPanel ? item.panelType : undefined)}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => {
-                      navigate(item.path);
-                      if (item.hasPanel && item.panelType) {
-                        setOpenPanel(openPanel === item.panelType ? null : item.panelType);
-                      }
-                    }}
-                    className={cn(
-                      'w-12 h-12 rounded-lg transition-colors',
-                      isActive(item.path)
-                        ? 'bg-[hsl(var(--slack-purple-active))] text-foreground hover:bg-[hsl(var(--slack-purple-hover))]'
-                        : 'text-[hsl(var(--slack-text-muted))] hover:bg-[hsl(var(--slack-purple-hover))] hover:text-foreground'
-                    )}
-                  >
-                    <item.icon className="h-5 w-5" />
-                  </Button>
-                  {item.showLabel && (
-                    <span className="text-xs text-[hsl(var(--slack-text-muted))] font-bold">
-                      {item.label}
-                    </span>
+        {/* Navigation Items - Scrollable */}
+        <ScrollArea className="flex-1">
+          <div className="flex flex-col items-center gap-2 px-3">
+            {navItems.map((item) => (
+              <div key={item.path} className="relative">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div 
+                      className="flex flex-col items-center gap-1"
+                      onMouseEnter={() => handleMouseEnter(item.label, item.hasPanel ? item.panelType : undefined)}
+                      onMouseLeave={handleMouseLeave}
+                    >
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => {
+                          navigate(item.path);
+                          if (item.hasPanel && item.panelType) {
+                            setOpenPanel(openPanel === item.panelType ? null : item.panelType);
+                          }
+                        }}
+                        className={cn(
+                          'w-12 h-12 rounded-lg transition-colors',
+                          isActive(item.path)
+                            ? 'bg-[hsl(var(--slack-purple-active))] text-foreground hover:bg-[hsl(var(--slack-purple-hover))]'
+                            : 'text-[hsl(var(--slack-text-muted))] hover:bg-[hsl(var(--slack-purple-hover))] hover:text-foreground'
+                        )}
+                      >
+                        {item.label === 'DMs' ? (
+                          <img 
+                            src={dmsIcon} 
+                            alt="DMs" 
+                            className="h-5 w-5 scale-x-[-1]" 
+                          />
+                        ) : (
+                          <item.icon className="h-5 w-5" />
+                        )}
+                      </Button>
+                      {item.showLabel && (
+                        <span className="text-xs text-[hsl(var(--slack-text-muted))] font-bold">
+                          {item.label}
+                        </span>
+                      )}
+                    </div>
+                  </TooltipTrigger>
+                  {!item.hasPanel && (
+                    <TooltipContent side="right" className="bg-popover border-border">
+                      {getSimpleTooltip(item.label)}
+                    </TooltipContent>
                   )}
-                </div>
-              </TooltipTrigger>
-              {!item.hasPanel && (
-                <TooltipContent side="right" className="bg-popover border-border">
-                  {getSimpleTooltip(item.label)}
-                </TooltipContent>
-              )}
-            </Tooltip>
+                </Tooltip>
 
-            {/* Hover Panel */}
-            <AnimatePresence>
-              {item.hasPanel && openPanel === item.panelType && (
-                <SidebarHoverPanel
-                  type={item.panelType}
-                  onClose={handlePanelClose}
-                />
-              )}
-            </AnimatePresence>
+                {/* Hover Panel */}
+                <AnimatePresence>
+                  {item.hasPanel && openPanel === item.panelType && (
+                    <SidebarHoverPanel
+                      type={item.panelType}
+                      onClose={handlePanelClose}
+                    />
+                  )}
+                </AnimatePresence>
+              </div>
+            ))}
           </div>
-        ))}
-
-        {/* Spacer to push profile to bottom */}
-        <div className="flex-1" />
+        </ScrollArea>
 
         {/* Profile at bottom */}
-        <DropdownMenu>
+        <div className="py-3 flex justify-center">
+          <DropdownMenu>
           <Tooltip>
             <TooltipTrigger asChild>
               <DropdownMenuTrigger asChild>
@@ -253,7 +267,8 @@ export const MainSidebar = () => {
               </DropdownMenuItem>
             </div>
           </DropdownMenuContent>
-        </DropdownMenu>
+          </DropdownMenu>
+        </div>
       </TooltipProvider>
     </aside>
   );
