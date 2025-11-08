@@ -39,30 +39,6 @@ export const MessageArea = () => {
     }
   }, [channelId, activeChannel, setActiveChannel, navigate]);
 
-  // Seed sample messages across all channels on first load
-  useEffect(() => {
-    const seed = async () => {
-      if (!user || channels.length === 0) return;
-      if (localStorage.getItem('seeded_messages_v1')) return;
-      const { count, error } = await supabase
-        .from('messages')
-        .select('*', { count: 'exact', head: true });
-      if (error) return;
-      if ((count || 0) > 0) {
-        localStorage.setItem('seeded_messages_v1', '1');
-        return;
-      }
-      const now = Date.now();
-      const sampleMessages = channels.flatMap((channel, idx) => ([
-        { channel_id: channel.id, user_id: user.id, content: `Welcome to #${channel.name}! 👋`, created_at: new Date(now - 60000*(idx*3+3)).toISOString() },
-        { channel_id: channel.id, user_id: user.id, content: `This is the ${channel.name} space${channel.description ? ` — ${channel.description}` : ''}.`, created_at: new Date(now - 60000*(idx*3+2)).toISOString() },
-        { channel_id: channel.id, user_id: user.id, content: 'Share your first message to get started!', created_at: new Date(now - 60000*(idx*3+1)).toISOString() },
-      ]));
-      await supabase.from('messages').insert(sampleMessages);
-      localStorage.setItem('seeded_messages_v1', '1');
-    };
-    seed();
-  }, [channels, user]);
 
   const channel = channels.find((c) => c.id === activeChannel);
 

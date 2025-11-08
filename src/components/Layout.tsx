@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { MainSidebar } from './MainSidebar';
 import { WorkspaceSidebar } from './WorkspaceSidebar';
 import { MembersSidebar } from './MembersSidebar';
+import { HelpSidebar } from './HelpSidebar';
 import { TopBar } from './TopBar';
 import { useAuth } from '@/hooks/useAuth';
 import { Loader2 } from 'lucide-react';
@@ -27,10 +28,11 @@ export const Layout = ({ children }: LayoutProps) => {
       <div className="flex flex-1 overflow-hidden">
         <MainSidebar />
         <WorkspaceSidebar />
-        <main className="flex-1 flex flex-col">
+        <main className="flex-1 flex flex-col overflow-hidden">
           {children}
         </main>
         <MembersSidebar />
+        <HelpSidebar />
       </div>
     </div>
   );
